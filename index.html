@@ -5,37 +5,44 @@
 	<title> jQuery FaceBook Feed </title>
 	<style type="text/css">
 		* { margin: 0; padding: 0 }
+		iframe { border: 0; width: 115px; height: 20px }
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 	<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 	<script src="jquery.facebook.feed.js"></script>
 </head>
 <body>
-	<script id="template" type="text/x-jquery-tmpl">
-		<a href="${user.page_link}">
-			<img src="${API_BASE}${user.id}/picture?type=square" />
-			${user.name}
+	<script id="template-fbuser" type="text/x-jquery-tmpl">
+		<a href="${link}">
+			<img src="${picture}" /> ${name}
 		</a>
-
+		<iframe src="https://www.facebook.com/plugins/like.php?href=${link}&layout=button_count&font=trebuchet+ms&locale=sk_SK&appId=114370451982089"></iframe>
+	</script>
+	<script id="template-fbfeed" type="text/x-jquery-tmpl">
 		<ul>
 			{{each(i, item) items}}
-			<li> ${item.message} <a href="${POST_BASE}?id=${item.user_id}&story_fbid=${item.post_id}">${item.date} ${item.time}</a> </li>
+			<li>
+				{{if item.message}}${item.message}{{else}}${item.name}{{/if}}
+				<a href="${POST_BASE}?id=${item.user_id}&story_fbid=${item.post_id}">${item.date} ${item.time}</a>
+			</li>
 			{{/each}}
 		</ul>
 	</script>
 
-	<div id="target">
-	</div>
+	<div id="target-user"></div>
+	<div id="target-feed"></div>
 
 	<script>
+		var uid = '242624912457370';
+
 		$(function () {
-			$('#target').fbfeed({
-				id: '242624912457370',
-				page: 'Arthea-sro',
+			$('#target-user').fbuser({
+				id: uid,
+			});
 
+			$('#target-feed').fbfeed({
+				id: uid,
 				token: '114370451982089|Z1bWi06KeQrp_mu-7MgPTaKaeqA',
-
-				template: '#template'
 			});
 		});
 	</script>

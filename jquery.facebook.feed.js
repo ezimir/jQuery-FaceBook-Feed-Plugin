@@ -1,10 +1,16 @@
 
 (function ($) {
 
-	var fbfeed = 'fbfeed';
-		settings = {},
-		defaults = {
-			items: 1
+	var fbfeed = 'fbfeed',
+		fbuser = 'fbuser',
+		settings_user = {},
+		settings_feed = {},
+		defaults_user = {
+			template: '#template-' + fbuser
+		},
+		defaults_feed = {
+			items: 3,
+			template: '#template-' + fbfeed
 		},
 		API_BASE = 'https://graph.facebook.com/',
 		FB_PAGE_BASE = 'https://www.facebook.com/pages/',
@@ -12,10 +18,21 @@
 
 	function showError(message) {
 		console.log(message);
-		alert(message);
 	}
 
-	function fbResponse(response) {
+	function fbResponseUser(response) {
+		if (response.error) {
+			return showError(response.error.message);
+		}
+
+		showUser(response);
+	}
+
+	function showUser(user) {
+		$(settings_user.template).tmpl(user).appendTo(settings_user.$target);
+	}
+
+	function fbResponseFeed(response) {
 		if (response.error) {
 			return showError(response.error.message);
 		}
@@ -31,38 +48,48 @@
 					post_id: ids[2]
 				});
 
+				if (typeof item.message === 'undefined') {
+					item.message = item.story;
+				}
+
 			items.push(item);
 		}
 
-		var user = items[0].from;
-		user.page_link = FB_PAGE_BASE + settings.page + '/' + user.id;
-
-		showItems(user, items);
+		showItems(items);
 	}
 
-	function showItems(user, items) {
+	function showItems(items) {
 		var data = {
-				API_BASE: API_BASE,
 				POST_BASE: POST_BASE,
-				user: user,
 				items: items
 			};
 
-		console.log(items);
+		$(settings_feed.template).tmpl(data).appendTo(settings_feed.$target);
+	}
 
-		$(settings.template).tmpl(data).appendTo(settings.$target);
+	$.fn[fbuser] = function (options) {
+		settings_user = $.extend({}, defaults_user, options);
+
+		settings_user.$target = this;
+		settings_user.$target.empty();
+
+		$.ajax({
+			url: API_BASE + settings_user.id + '/?fields=name,picture,link',
+			dataType: 'jsonp',
+			success: fbResponseUser
+		});
 	}
 
 	$.fn[fbfeed] = function (options) {
-		settings = $.extend({}, defaults, options);
-		settings.$target = this;
+		settings_feed = $.extend({}, defaults_feed, options);
 
-		settings.$target.empty();
+		settings_feed.$target = this;
+		settings_feed.$target.empty();
 
 		$.ajax({
-			url: API_BASE + settings.id + '/feed/?limit=' + settings.items + '&access_token=' + settings.token,
+			url: API_BASE + settings_feed.id + '/feed/?limit=' + settings_feed.items + '&access_token=' + settings_feed.token,
 			dataType: 'jsonp',
-			success: fbResponse
+			success: fbResponseFeed
 		});
 	}
 
