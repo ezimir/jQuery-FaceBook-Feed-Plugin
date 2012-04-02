@@ -7,9 +7,37 @@
 		* { margin: 0; padding: 0 }
 	</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
 	<script src="jquery.facebook.feed.js"></script>
 </head>
 <body>
+	<script id="template" type="text/x-jquery-tmpl">
+		<a href="${user.page_link}">
+			<img src="${API_BASE}${user.id}/picture?type=square" />
+			${user.name}
+		</a>
 
+		<ul>
+			{{each(i, item) items}}
+			<li> ${item.message} <a href="${item.link}">${item.date} ${item.time}</a> </li>
+			{{/each}}
+		</ul>
+	</script>
+
+	<div id="target">
+	</div>
+
+	<script>
+		$(function () {
+			$('#target').fbfeed({
+				id: '242624912457370',
+				page: 'Arthea-sro',
+
+				token: '114370451982089|Z1bWi06KeQrp_mu-7MgPTaKaeqA',
+
+				template: '#template'
+			});
+		});
+	</script>
 </body>
 </html>
