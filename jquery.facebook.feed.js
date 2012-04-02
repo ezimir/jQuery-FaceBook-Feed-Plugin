@@ -7,7 +7,8 @@
 			items: 1
 		},
 		API_BASE = 'https://graph.facebook.com/',
-		FB_PAGE_BASE = 'https://www.facebook.com/pages/';
+		FB_PAGE_BASE = 'https://www.facebook.com/pages/',
+		POST_BASE = 'https://www.facebook.com/permalink.php';
 
 	function showError(message) {
 		console.log(message);
@@ -22,9 +23,12 @@
 		var items = [];
 		for (var i = 0; post = response.data[i]; i++) {
 			var date = /([\d-]+)T([\d:]+)\+(.+)/.exec(post.created_time),
+				ids = /(\d+)_(\d+)/.exec(post.id),
 				item = $.extend({}, post, {
 					date: date[1],
-					time: date[2]
+					time: date[2],
+					user_id: ids[1],
+					post_id: ids[2]
 				});
 
 			items.push(item);
@@ -39,6 +43,7 @@
 	function showItems(user, items) {
 		var data = {
 				API_BASE: API_BASE,
+				POST_BASE: POST_BASE,
 				user: user,
 				items: items
 			};

@@ -19,7 +19,7 @@
 
 		<ul>
 			{{each(i, item) items}}
-			<li> ${item.message} <a href="${item.link}">${item.date} ${item.time}</a> </li>
+			<li> ${item.message} <a href="${POST_BASE}?id=${item.user_id}&story_fbid=${item.post_id}">${item.date} ${item.time}</a> </li>
 			{{/each}}
 		</ul>
 	</script>
