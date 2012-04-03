@@ -6,6 +6,7 @@
 		settings_user = {},
 		settings_feed = {},
 		defaults_user = {
+			params: 'name,picture,link,about',
 			template: '#template-' + fbuser
 		},
 		defaults_feed = {
@@ -74,7 +75,7 @@
 		settings_user.$target.empty();
 
 		$.ajax({
-			url: API_BASE + settings_user.id + '/?fields=name,picture,link',
+			url: API_BASE + settings_user.id + '/?fields=' + settings_user.params,
 			dataType: 'jsonp',
 			success: fbResponseUser
 		});
