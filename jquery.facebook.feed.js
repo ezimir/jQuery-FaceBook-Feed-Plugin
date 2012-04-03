@@ -26,11 +26,7 @@
 			return showError(response.error.message);
 		}
 
-		showUser(response);
-	}
-
-	function showUser(user) {
-		$(settings_user.template).tmpl(user).appendTo(settings_user.$target);
+		$(settings_user.template).tmpl(response).appendTo(settings_user.$target);
 	}
 
 	function fbResponseFeed(response) {
@@ -46,8 +42,9 @@
 					date: date[1],
 					time: date[2],
 					user_id: ids[1],
-					post_id: ids[2]
+					post_id: ids[2],
 				});
+				item.permalink = POST_BASE + '?id=' + item.user_id + '&story_fbid=' + item.post_id;
 
 				if (typeof item.message === 'undefined') {
 					item.message = item.story;
@@ -56,16 +53,7 @@
 			items.push(item);
 		}
 
-		showItems(items);
-	}
-
-	function showItems(items) {
-		var data = {
-				POST_BASE: POST_BASE,
-				items: items
-			};
-
-		$(settings_feed.template).tmpl(data).appendTo(settings_feed.$target);
+		$(settings_feed.template).tmpl({ items: items }).appendTo(settings_feed.$target);
 	}
 
 	$.fn[fbuser] = function (options) {

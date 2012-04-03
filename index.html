@@ -23,7 +23,7 @@
 			{{each(i, item) items}}
 			<li>
 				{{if item.message}}${item.message}{{else}}${item.name}{{/if}}
-				<a href="${POST_BASE}?id=${item.user_id}&story_fbid=${item.post_id}">${item.date} ${item.time}</a>
+				<a href="${item.permalink}">${item.date} ${item.time}</a>
 			</li>
 			{{/each}}
 		</ul>
